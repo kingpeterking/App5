@@ -12,7 +12,6 @@ namespace Windows {
         namespace Xaml {
             namespace Controls {
                 ref class TextBox;
-                ref class Button;
             }
         }
     }
@@ -51,7 +50,6 @@ namespace App5
     
         private: ::Windows::UI::Xaml::Controls::TextBox^ txtboxMouseX;
         private: ::Windows::UI::Xaml::Controls::TextBox^ txtboxMouseXAccum;
-        private: ::Windows::UI::Xaml::Controls::Button^ Test;
         private: ::Microsoft::Graphics::Canvas::UI::Xaml::CanvasControl^ Canvas;
         private: ::Windows::UI::Xaml::Controls::TextBox^ Timer;
     };

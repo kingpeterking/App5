@@ -35,7 +35,7 @@ typedef std::chrono::high_resolution_clock Clock;
 auto LastEventTime = Clock::now();
 auto ThisEventTime = Clock::now();
 std::chrono::duration<double> ElapsedTime; 
-int SamplingFrequency = 10;					// 1000 divided by 10 = 100 times per second
+const int SamplingFrequency = 1;					// 1000 divided by 10 = 100 times per second
 const auto TimeInterval = std::chrono::milliseconds(SamplingFrequency); 
 
 // PK Screen dimensions
@@ -52,16 +52,6 @@ MainPage::MainPage()
 	InitializeComponent();
 
 }
-
-
-
-
-void App5::MainPage::Button_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
-{
-	txtboxMouseX->Text = "Hello, ";
-
-}
-
 
 
 
@@ -87,16 +77,15 @@ void App5::MainPage::Pointer_Moved(Platform::Object^ sender, Windows::UI::Xaml::
 		MainPage::Timer->Text = DisplayTime.count().ToString();
 		if (ElapsedTime >= TimeInterval)
 		{
-			if (mouseLogCounter >= mouseLogSize)
+			if (mouseLogCounter >= (mouseLogSize - 1))
 			{
 				// reset the counter to zero and clear the log
 				mouseLogCounter = 0; 
-				// Add clearing the log
 			}
 			LastEventTime = Clock::now();							// Save the time when this was logged
-			mouseLog[mouseLogCounter][0] = mouseLogCounter;			// Store the mouse delta
+			mouseLogCounter++; 
+			mouseLog[mouseLogCounter][0] = mouseCurrentX;			// Store the mouse data
 			mouseLog[mouseLogCounter][1] = mouseDeltaX;
-			mouseLogCounter++;
 			mouseDeltaX = 0; 
 			
 		}
@@ -118,23 +107,44 @@ void App5::MainPage::Canvas_Draw(Microsoft::Graphics::Canvas::UI::Xaml::CanvasCo
 {
 	// Draw a horizontal axis across the middle of the screen 
 	Windows::UI::Color LineColBlue{ 255, 0,0,255 }; // blue 
+	Windows::UI::Color LineColRed{ 255, 255,0,0 }; // red
+	Windows::UI::Color LineColGreen{ 255, 0,255,0 }; // green
+
 	float X1 = 0;
-	float Y1 = ScreenY / 2;
+	float Y1 = ScreenYMid;
 	float X2 = ScreenX;
 	float Y2 = Y1;
 	args->DrawingSession->DrawLine(X1, Y1, X2, Y2, LineColBlue);
 	
 	// Loop through the mousepoints and plot the line
-	X1 = 0;
-	Y1 = ScreenY / 2;
-	Windows::UI::Color LineColRed{ 255, 255,0,0 }; // red
-	for (int iCounter = 0 ; iCounter < mouseLogSize; iCounter++)
+	
+	X2 = mouseLog[1][0];		// x-location
+	Y2 = mouseLog[1][1];		// speed
+
+	for (int iCounter = 1 ; iCounter < mouseLogSize; iCounter++)
 	{
-		X1 = mouseLog[iCounter][0];		//time
+		X1 = mouseLog[iCounter][0];		// x-location
 		Y1 = mouseLog[iCounter][1];		// speed
-		args->DrawingSession->DrawLine(X1, Y1 + ScreenYMid, X2, Y2 + ScreenYMid, LineColRed);
+
+		if (iCounter != (mouseLogCounter + 1))
+		{
+			// draw the line
+			args->DrawingSession->DrawLine(X1, Y1 + ScreenYMid, X2, Y2 + ScreenYMid, LineColRed);
+		}
+		if (iCounter == (mouseLogSize - 1))
+		{
+			// draw the line back to mouselog[0]
+			X2 = mouseLog[1][0];
+			Y2 = mouseLog[1][1];
+			args->DrawingSession->DrawLine(X1, Y1 + ScreenYMid, X2, Y2 + ScreenYMid, LineColGreen);
+		}
+
+		// don't draw the line if none of these are passed 
+		
+
 		X2 = X1;
 		Y2 = Y1;
+		
 	}
 
 	
