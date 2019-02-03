@@ -19,31 +19,41 @@ using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 
-
 //PK for mouse delta X and Y
 float mouseLastX = 0;
 float mouseLastY = 0;
 float mouseDeltaX = 0;
 float mouseDeltaY = 0;
+float mouseRealX = 0;
+float mouseRealY = 0;
+float mouseResetX = 0; 
+float mouseResetY = 0;
 const int mouseLogSize = 1000; 
 float mouseLog[mouseLogSize][2];		// [0] = time, [1] = speed
 int mouseLogCounter = 0; 
-
 
 // PK Timer
 typedef std::chrono::high_resolution_clock Clock;
 auto LastEventTime = Clock::now();
 auto ThisEventTime = Clock::now();
 std::chrono::duration<double> ElapsedTime; 
-const int SamplingFrequency = 1;					// 1000 divided by 10 = 100 times per second
-const auto TimeInterval = std::chrono::milliseconds(SamplingFrequency); 
+const int SamplingFrequency = 1000;					// 1,000,000 divided by SamplingFrequency = times per second
+const auto TimeInterval = std::chrono::microseconds(SamplingFrequency); 
 
 // PK Screen dimensions
 float ScreenY = 800; 
-float ScreenYMid = ScreenY / 2; 
-float ScreenX = 1000; 
-float WidthInSeconds = 4; 
+float ScreenX = 2000; 
+float ScreenXMid = ScreenX / 2;
+float ScreenYMid = ScreenY / 2;
+float WidthInSeconds = 4;
 float WidthPerSecond = (ScreenX / WidthInSeconds);
+
+// Mouse Tracking
+int TrackingModeToggle = 0;
+
+// Scaling for mouse
+float ScaleX = 100; 
+float ScaleY = 2; 
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -51,53 +61,90 @@ MainPage::MainPage()
 {
 	InitializeComponent();
 
+
+
+	
 }
 
 
 
 void App5::MainPage::Pointer_Moved(Platform::Object^ sender, Windows::UI::Xaml::Input::PointerRoutedEventArgs^ e)
 {
-	// First check that we have a mouse event
-	Windows::UI::Xaml::Input::Pointer ^ptr = e->Pointer;
-	if (ptr->PointerDeviceType == Windows::Devices::Input::PointerDeviceType::Mouse)
+	// Check whether tracking mode is on 
+	if (TrackingModeToggle == 1)
 	{
-		// This accumulates all movements that happen within the timer interval and stores them in mouseLog
-		// Check that whether enough time has passed to redraw the grapgh or just log the point 
 
-		// Get the mouse movement
-		// Currently just using X, but will change to use X and Y later
-		Windows::UI::Input::PointerPoint ^ptrPoint = e->GetCurrentPoint(nullptr);
-		float mouseCurrentX = 0;
-		mouseCurrentX = ptrPoint->Position.X;
-		mouseDeltaX += mouseCurrentX - mouseLastX;
-
-		ThisEventTime = Clock::now();
-		ElapsedTime = ThisEventTime - LastEventTime;
-		std::chrono::duration<double>  DisplayTime = ThisEventTime - LastEventTime;
-		MainPage::Timer->Text = DisplayTime.count().ToString();
-		if (ElapsedTime >= TimeInterval)
+		// Check that we have a mouse event
+		Windows::UI::Xaml::Input::Pointer ^ptr = e->Pointer;
+		if (ptr->PointerDeviceType == Windows::Devices::Input::PointerDeviceType::Mouse)
 		{
-			if (mouseLogCounter >= (mouseLogSize - 1))
+
+			// This accumulates all movements that happen within the timer interval and stores them in mouseLog
+			// Check that whether enough time has passed to redraw the grapgh or just log the point 
+
+			// Get the mouse movement
+			// Currently just using X, but will change to use X and Y later
+			Windows::UI::Input::PointerPoint ^ptrPoint = e->GetCurrentPoint(nullptr);
+			float mouseCurrentX = 0;
+			mouseCurrentX = ptrPoint->Position.X;
+			mouseDeltaX += mouseCurrentX - mouseLastX;
+			mouseRealX += mouseDeltaX; 
+
+			// Set up clock
+			ThisEventTime = Clock::now();
+			ElapsedTime = ThisEventTime - LastEventTime;
+			std::chrono::duration<double>  DisplayTime = ThisEventTime - LastEventTime;
+			MainPage::Timer->Text = DisplayTime.count().ToString();
+
+			if (ElapsedTime >= TimeInterval)				// Controls sampling rate
 			{
-				// reset the counter to zero and clear the log
-				mouseLogCounter = 0; 
+				if (mouseLogCounter >= (mouseLogSize - 1))
+				{
+					// reset the counter to zero and clear the log
+					mouseLogCounter = 0;
+				}
+
+				LastEventTime = Clock::now();							// Save the time when this was logged
+				mouseLogCounter++;
+
+				mouseLog[mouseLogCounter][0] = mouseRealX;			// Store the mouse data
+				mouseLog[mouseLogCounter][1] = mouseDeltaX;
+				MainPage::txtboxMouseDelta->Text = mouseDeltaX.ToString();
+				if (mouseDeltaX > 700)
+				{
+					int j = 90; // stop 
+				}
+				mouseDeltaX = 0;
+
+				// remember last position for next delta
+				mouseLastX = mouseCurrentX;
+
+				// reset mouse to centre of screen if it has moved outside of the bounds
+				if (mouseCurrentX > 1500 || mouseCurrentX <500)
+				{
+					Windows::UI::Core::CoreWindow^ window = Windows::UI::Core::CoreWindow::GetForCurrentThread();
+					window->PointerPosition = Point(ScreenXMid, ScreenYMid);
+					mouseResetX = ScreenXMid;
+					mouseLastX = mouseResetX; 
+					mouseDeltaX = 0; 
+					//mouseLog[mouseLogCounter][1] = mouseDeltaX;
+				}
+
 			}
-			LastEventTime = Clock::now();							// Save the time when this was logged
-			mouseLogCounter++; 
-			mouseLog[mouseLogCounter][0] = mouseCurrentX;			// Store the mouse data
-			mouseLog[mouseLogCounter][1] = mouseDeltaX;
-			mouseDeltaX = 0; 
+
+			MainPage::txtboxMouseCurrent->Text = mouseCurrentX.ToString();
+			MainPage::txtboxMouseLast->Text = mouseLastX.ToString();
+			MainPage::txtboxMouseReal->Text = mouseRealX.ToString();
+			MainPage::txtboxMouseReset->Text = mouseResetX.ToString();
 			
+			
+
+
+			Canvas->Invalidate();				// redraw the graph
 		}
 
-		MainPage::txtboxMouseX->Text = mouseCurrentX.ToString();
-		MainPage::txtboxMouseXAccum->Text = mouseDeltaX.ToString();
 
-		mouseLastX = mouseCurrentX;
-		Canvas->Invalidate();				// redraw the graph
 	}
-
-
 
 }
 
@@ -105,16 +152,23 @@ void App5::MainPage::Pointer_Moved(Platform::Object^ sender, Windows::UI::Xaml::
 
 void App5::MainPage::Canvas_Draw(Microsoft::Graphics::Canvas::UI::Xaml::CanvasControl^ sender, Microsoft::Graphics::Canvas::UI::Xaml::CanvasDrawEventArgs^ args)
 {
-	// Draw a horizontal axis across the middle of the screen 
+	// Set up the colours 
 	Windows::UI::Color LineColBlue{ 255, 0,0,255 }; // blue 
 	Windows::UI::Color LineColRed{ 255, 255,0,0 }; // red
 	Windows::UI::Color LineColGreen{ 255, 0,255,0 }; // green
 
+	// Set up the line variables
 	float X1 = 0;
 	float Y1 = ScreenYMid;
 	float X2 = ScreenX;
 	float Y2 = Y1;
+
+	// Draw a horizontal axis across the middle of the screen 
 	args->DrawingSession->DrawLine(X1, Y1, X2, Y2, LineColBlue);
+	args->DrawingSession->DrawLine(500, 0, 500, ScreenY, LineColBlue);
+	args->DrawingSession->DrawLine(1000, 0, 1000, ScreenY, LineColBlue);
+	args->DrawingSession->DrawLine(1500, 0, 1500, ScreenY, LineColBlue);
+
 	
 	// Loop through the mousepoints and plot the line
 	
@@ -129,14 +183,14 @@ void App5::MainPage::Canvas_Draw(Microsoft::Graphics::Canvas::UI::Xaml::CanvasCo
 		if (iCounter != (mouseLogCounter + 1))
 		{
 			// draw the line
-			args->DrawingSession->DrawLine(X1, Y1 + ScreenYMid, X2, Y2 + ScreenYMid, LineColRed);
+			args->DrawingSession->DrawLine((X1 / ScaleX), (Y1 / ScaleY) + ScreenYMid, (X2 / ScaleX) , (Y2 / ScaleY) + ScreenYMid, LineColRed);
 		}
 		if (iCounter == (mouseLogSize - 1))
 		{
 			// draw the line back to mouselog[0]
 			X2 = mouseLog[1][0];
 			Y2 = mouseLog[1][1];
-			args->DrawingSession->DrawLine(X1, Y1 + ScreenYMid, X2, Y2 + ScreenYMid, LineColGreen);
+			args->DrawingSession->DrawLine((X1 / ScaleX), (Y1 / ScaleY) + ScreenYMid, (X2 / ScaleX), (Y2 / ScaleY) + ScreenYMid, LineColGreen);
 		}
 
 		// don't draw the line if none of these are passed 
@@ -148,5 +202,39 @@ void App5::MainPage::Canvas_Draw(Microsoft::Graphics::Canvas::UI::Xaml::CanvasCo
 	}
 
 	
+
+}
+
+
+void App5::MainPage::Tracking_Mode(Platform::Object^ sender, Windows::UI::Xaml::Input::KeyRoutedEventArgs^ e)
+{
+	// toggle between tracking and non tracking 
+
+	if (e->Key == Windows::System::VirtualKey::T)
+	{
+		if (TrackingModeToggle == 0)
+		{
+			TrackingModeToggle = 1; // on 
+				// Move the mouse to the middle of the screen and switch off pointer
+			Windows::UI::Core::CoreWindow^ window = Windows::UI::Core::CoreWindow::GetForCurrentThread();
+			window->PointerPosition = Point(ScreenXMid, ScreenYMid);
+			mouseResetX = ScreenXMid;
+			mouseResetY = ScreenYMid;
+			//window->PointerCursor = nullptr;
+		}
+		else
+		{
+			TrackingModeToggle = 0; // off
+				// Move the mouse to the middle of the screen and enable the pointer
+			Windows::UI::Core::CoreWindow^ window = Windows::UI::Core::CoreWindow::GetForCurrentThread();
+			window->PointerPosition = Point(ScreenXMid, ScreenYMid);
+			mouseResetX = ScreenXMid;
+			mouseResetY = ScreenYMid;
+			//window->PointerCursor = ref new Windows::UI::Core::CoreCursor(Windows::UI::Core::CoreCursorType::Arrow, 0);
+		}
+		
+		MainPage::Messages->Text = "T key to toggle capture mode";
+		
+	}
 
 }

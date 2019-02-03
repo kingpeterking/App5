@@ -11,6 +11,7 @@ namespace Windows {
     namespace UI {
         namespace Xaml {
             namespace Controls {
+                ref class Grid;
                 ref class TextBox;
             }
         }
@@ -48,10 +49,15 @@ namespace App5
         bool _contentLoaded;
     
     
-        private: ::Windows::UI::Xaml::Controls::TextBox^ txtboxMouseX;
-        private: ::Windows::UI::Xaml::Controls::TextBox^ txtboxMouseXAccum;
-        private: ::Microsoft::Graphics::Canvas::UI::Xaml::CanvasControl^ Canvas;
+        private: ::Windows::UI::Xaml::Controls::Grid^ BaseGrid;
+        private: ::Windows::UI::Xaml::Controls::TextBox^ txtboxMouseCurrent;
+        private: ::Windows::UI::Xaml::Controls::TextBox^ txtboxMouseDelta;
+        private: ::Windows::UI::Xaml::Controls::TextBox^ txtboxMouseLast;
+        private: ::Windows::UI::Xaml::Controls::TextBox^ txtboxMouseReal;
+        private: ::Windows::UI::Xaml::Controls::TextBox^ txtboxMouseReset;
+        private: ::Windows::UI::Xaml::Controls::TextBox^ Messages;
         private: ::Windows::UI::Xaml::Controls::TextBox^ Timer;
+        private: ::Microsoft::Graphics::Canvas::UI::Xaml::CanvasControl^ Canvas;
     };
 }
 

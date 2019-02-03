@@ -9,16 +9,22 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid x:ConnectionId='2'                             >
-        <TextBox x:ConnectionId='3' x:Name="txtboxMouseX" HorizontalAlignment="Left" Margin="151,74,0,0" Text="TextBox" VerticalAlignment="Top" Width="132"/>
-        <TextBox x:ConnectionId='4' x:Name="txtboxMouseXAccum" HorizontalAlignment="Left" Margin="151,131,0,0" Text="TextBox" VerticalAlignment="Top" Width="132"/>
-        <TextBlock HorizontalAlignment="Left" Margin="37,74,0,0" Text="Mouse X" TextWrapping="Wrap" VerticalAlignment="Top" />
-        <TextBlock HorizontalAlignment="Left" Margin="37,131,0,0" Text="Mouse Accum" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <canvas:CanvasControl x:ConnectionId='5' x:Name="Canvas"                   />
-        <TextBox x:ConnectionId='6' x:Name="Timer" HorizontalAlignment="Left" Margin="151,200,0,0" Text="TextBox" VerticalAlignment="Top" Width="132"/>
-        <TextBlock HorizontalAlignment="Left" Margin="37,200,0,0" Text="Timer" TextWrapping="Wrap" VerticalAlignment="Top" />
-
-
+    <Grid x:ConnectionId='2' x:Name="BaseGrid"                                                   >
+        <TextBox x:ConnectionId='3' x:Name="txtboxMouseCurrent" HorizontalAlignment="Left" Margin="151,75,0,0" Text="TextBox" VerticalAlignment="Top" Width="132"/>
+        <TextBox x:ConnectionId='4' x:Name="txtboxMouseDelta" HorizontalAlignment="Left" Margin="151,125,0,0" Text="TextBox" VerticalAlignment="Top" Width="132"/>
+        <TextBox x:ConnectionId='5' x:Name="txtboxMouseLast" HorizontalAlignment="Left" Margin="151,175,0,0" Text="TextBox" VerticalAlignment="Top" Width="132"/>
+        <TextBox x:ConnectionId='6' x:Name="txtboxMouseReal" HorizontalAlignment="Left" Margin="151,225,0,0" Text="TextBox" VerticalAlignment="Top" Width="132"/>
+        <TextBox x:ConnectionId='7' x:Name="txtboxMouseReset" HorizontalAlignment="Left" Margin="151,275,0,0" Text="TextBox" VerticalAlignment="Top" Width="132"/>
+        <TextBox x:ConnectionId='8' x:Name="Messages" HorizontalAlignment="Left" Margin="151,750,0,0" Text="TextBox" VerticalAlignment="Top" Width="250"/>
+        <TextBox x:ConnectionId='9' x:Name="Timer" HorizontalAlignment="Left" Margin="151,325,0,0" Text="TextBox" VerticalAlignment="Top" Width="132"/>
+        <TextBlock HorizontalAlignment="Left" Margin="30,75,0,0" Text="Mouse Current" TextWrapping="Wrap" VerticalAlignment="Top" />
+        <TextBlock HorizontalAlignment="Left" Margin="30,125,0,0" Text="Mouse Delta" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="30,175,0,0" Text="Mouse Last" TextWrapping="Wrap" VerticalAlignment="Top" />
+        <TextBlock HorizontalAlignment="Left" Margin="30,225,0,0" Text="Mouse Real" TextWrapping="Wrap" VerticalAlignment="Top" />
+        <TextBlock HorizontalAlignment="Left" Margin="30,275,0,0" Text="Mouse Reset" TextWrapping="Wrap" VerticalAlignment="Top" />
+        <TextBlock HorizontalAlignment="Left" Margin="30,325,0,0" Text="Timer" TextWrapping="Wrap" VerticalAlignment="Top" />
+        <TextBlock HorizontalAlignment="Left" Margin="30,750,0,0" Text="Messages" TextWrapping="Wrap" VerticalAlignment="Top" />
+        <canvas:CanvasControl x:ConnectionId='10' x:Name="Canvas"                    HorizontalAlignment="Stretch" Margin="0,0,0,0" Grid.RowSpan="2" VerticalAlignment="Stretch"/>
     </Grid>
 </Page>
 

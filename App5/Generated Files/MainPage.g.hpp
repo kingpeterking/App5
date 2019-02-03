@@ -32,31 +32,53 @@ void ::App5::MainPage::Connect(int __connectionId, ::Platform::Object^ __target)
     {
     case 2:
         {
-            ::Windows::UI::Xaml::Controls::Grid^ element2 = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
-            (safe_cast<::Windows::UI::Xaml::Controls::Grid^>(element2))->PointerMoved += ref new ::Windows::UI::Xaml::Input::PointerEventHandler(this, (void (::App5::MainPage::*)
+            this->BaseGrid = safe_cast<::Windows::UI::Xaml::Controls::Grid^>(__target);
+            (safe_cast<::Windows::UI::Xaml::Controls::Grid^>(this->BaseGrid))->PointerMoved += ref new ::Windows::UI::Xaml::Input::PointerEventHandler(this, (void (::App5::MainPage::*)
                 (::Platform::Object^, ::Windows::UI::Xaml::Input::PointerRoutedEventArgs^))&MainPage::Pointer_Moved);
+            (safe_cast<::Windows::UI::Xaml::Controls::Grid^>(this->BaseGrid))->KeyUp += ref new ::Windows::UI::Xaml::Input::KeyEventHandler(this, (void (::App5::MainPage::*)
+                (::Platform::Object^, ::Windows::UI::Xaml::Input::KeyRoutedEventArgs^))&MainPage::Tracking_Mode);
         }
         break;
     case 3:
         {
-            this->txtboxMouseX = safe_cast<::Windows::UI::Xaml::Controls::TextBox^>(__target);
+            this->txtboxMouseCurrent = safe_cast<::Windows::UI::Xaml::Controls::TextBox^>(__target);
         }
         break;
     case 4:
         {
-            this->txtboxMouseXAccum = safe_cast<::Windows::UI::Xaml::Controls::TextBox^>(__target);
+            this->txtboxMouseDelta = safe_cast<::Windows::UI::Xaml::Controls::TextBox^>(__target);
         }
         break;
     case 5:
         {
-            this->Canvas = safe_cast<::Microsoft::Graphics::Canvas::UI::Xaml::CanvasControl^>(__target);
-            (safe_cast<::Microsoft::Graphics::Canvas::UI::Xaml::CanvasControl^>(this->Canvas))->Draw += ref new ::Windows::Foundation::TypedEventHandler<::Microsoft::Graphics::Canvas::UI::Xaml::CanvasControl^, ::Microsoft::Graphics::Canvas::UI::Xaml::CanvasDrawEventArgs^>(this, (void (::App5::MainPage::*)
-                (::Microsoft::Graphics::Canvas::UI::Xaml::CanvasControl^, ::Microsoft::Graphics::Canvas::UI::Xaml::CanvasDrawEventArgs^))&MainPage::Canvas_Draw);
+            this->txtboxMouseLast = safe_cast<::Windows::UI::Xaml::Controls::TextBox^>(__target);
         }
         break;
     case 6:
         {
+            this->txtboxMouseReal = safe_cast<::Windows::UI::Xaml::Controls::TextBox^>(__target);
+        }
+        break;
+    case 7:
+        {
+            this->txtboxMouseReset = safe_cast<::Windows::UI::Xaml::Controls::TextBox^>(__target);
+        }
+        break;
+    case 8:
+        {
+            this->Messages = safe_cast<::Windows::UI::Xaml::Controls::TextBox^>(__target);
+        }
+        break;
+    case 9:
+        {
             this->Timer = safe_cast<::Windows::UI::Xaml::Controls::TextBox^>(__target);
+        }
+        break;
+    case 10:
+        {
+            this->Canvas = safe_cast<::Microsoft::Graphics::Canvas::UI::Xaml::CanvasControl^>(__target);
+            (safe_cast<::Microsoft::Graphics::Canvas::UI::Xaml::CanvasControl^>(this->Canvas))->Draw += ref new ::Windows::Foundation::TypedEventHandler<::Microsoft::Graphics::Canvas::UI::Xaml::CanvasControl^, ::Microsoft::Graphics::Canvas::UI::Xaml::CanvasDrawEventArgs^>(this, (void (::App5::MainPage::*)
+                (::Microsoft::Graphics::Canvas::UI::Xaml::CanvasControl^, ::Microsoft::Graphics::Canvas::UI::Xaml::CanvasDrawEventArgs^))&MainPage::Canvas_Draw);
         }
         break;
     }
