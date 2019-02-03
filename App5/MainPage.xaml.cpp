@@ -110,7 +110,7 @@ void App5::MainPage::Pointer_Moved(Platform::Object^ sender, Windows::UI::Xaml::
 				mouseLog[mouseLogCounter][0] = mouseRealX;			// Store the mouse data
 				mouseLog[mouseLogCounter][1] = mouseDeltaX;
 				MainPage::txtboxMouseDelta->Text = mouseDeltaX.ToString();
-				if (mouseDeltaX > 700)
+				if (mouseDeltaX > 250)
 				{
 					int j = 90; // stop 
 				}
