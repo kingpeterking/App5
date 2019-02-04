@@ -57,6 +57,7 @@ namespace App5
         private: ::Windows::UI::Xaml::Controls::TextBox^ txtboxMouseReset;
         private: ::Windows::UI::Xaml::Controls::TextBox^ Messages;
         private: ::Windows::UI::Xaml::Controls::TextBox^ Timer;
+        private: ::Windows::UI::Xaml::Controls::TextBox^ txtboxGraphTimer;
         private: ::Microsoft::Graphics::Canvas::UI::Xaml::CanvasControl^ Canvas;
     };
 }

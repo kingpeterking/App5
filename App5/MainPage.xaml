@@ -17,12 +17,14 @@
         <TextBox x:Name="txtboxMouseReset" HorizontalAlignment="Left" Margin="151,275,0,0" Text="TextBox" VerticalAlignment="Top" Width="132"/>
         <TextBox x:Name="Messages" HorizontalAlignment="Left" Margin="151,750,0,0" Text="TextBox" VerticalAlignment="Top" Width="250"/>
         <TextBox x:Name="Timer" HorizontalAlignment="Left" Margin="151,325,0,0" Text="TextBox" VerticalAlignment="Top" Width="132"/>
+        <TextBox x:Name="txtboxGraphTimer" HorizontalAlignment="Left" Margin="151,375,0,0" Text="TextBox" VerticalAlignment="Top" Width="132"/>
         <TextBlock HorizontalAlignment="Left" Margin="30,75,0,0" Text="Mouse Current" TextWrapping="Wrap" VerticalAlignment="Top" />
         <TextBlock HorizontalAlignment="Left" Margin="30,125,0,0" Text="Mouse Delta" TextWrapping="Wrap" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="30,175,0,0" Text="Mouse Last" TextWrapping="Wrap" VerticalAlignment="Top" />
         <TextBlock HorizontalAlignment="Left" Margin="30,225,0,0" Text="Mouse Real" TextWrapping="Wrap" VerticalAlignment="Top" />
         <TextBlock HorizontalAlignment="Left" Margin="30,275,0,0" Text="Mouse Reset" TextWrapping="Wrap" VerticalAlignment="Top" />
         <TextBlock HorizontalAlignment="Left" Margin="30,325,0,0" Text="Timer" TextWrapping="Wrap" VerticalAlignment="Top" />
+        <TextBlock HorizontalAlignment="Left" Margin="30,375,0,0" Text="GraphTimer" TextWrapping="Wrap" VerticalAlignment="Top" />
         <TextBlock HorizontalAlignment="Left" Margin="30,750,0,0" Text="Messages" TextWrapping="Wrap" VerticalAlignment="Top" />
         <canvas:CanvasControl x:Name="Canvas" Draw="Canvas_Draw" HorizontalAlignment="Stretch" Margin="0,0,0,0" Grid.RowSpan="2" VerticalAlignment="Stretch"/>
     </Grid>

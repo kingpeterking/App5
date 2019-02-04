@@ -76,6 +76,11 @@ void ::App5::MainPage::Connect(int __connectionId, ::Platform::Object^ __target)
         break;
     case 10:
         {
+            this->txtboxGraphTimer = safe_cast<::Windows::UI::Xaml::Controls::TextBox^>(__target);
+        }
+        break;
+    case 11:
+        {
             this->Canvas = safe_cast<::Microsoft::Graphics::Canvas::UI::Xaml::CanvasControl^>(__target);
             (safe_cast<::Microsoft::Graphics::Canvas::UI::Xaml::CanvasControl^>(this->Canvas))->Draw += ref new ::Windows::Foundation::TypedEventHandler<::Microsoft::Graphics::Canvas::UI::Xaml::CanvasControl^, ::Microsoft::Graphics::Canvas::UI::Xaml::CanvasDrawEventArgs^>(this, (void (::App5::MainPage::*)
                 (::Microsoft::Graphics::Canvas::UI::Xaml::CanvasControl^, ::Microsoft::Graphics::Canvas::UI::Xaml::CanvasDrawEventArgs^))&MainPage::Canvas_Draw);

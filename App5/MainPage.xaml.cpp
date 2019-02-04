@@ -34,9 +34,12 @@ int mouseLogCounter = 0;
 
 // PK Timer
 typedef std::chrono::high_resolution_clock Clock;
+auto GraphStartTime = Clock::now(); 
 auto LastEventTime = Clock::now();
 auto ThisEventTime = Clock::now();
 std::chrono::duration<double> ElapsedTime; 
+std::chrono::duration<double> GraphPlotTime;
+double GraphTimeScalar = 100000 / 6; 
 const int SamplingFrequency = 1000;					// 1,000,000 divided by SamplingFrequency = times per second
 const auto TimeInterval = std::chrono::microseconds(SamplingFrequency); 
 
@@ -102,18 +105,18 @@ void App5::MainPage::Pointer_Moved(Platform::Object^ sender, Windows::UI::Xaml::
 				{
 					// reset the counter to zero and clear the log
 					mouseLogCounter = 0;
+					GraphStartTime = Clock::now();
 				}
 
 				LastEventTime = Clock::now();							// Save the time when this was logged
 				mouseLogCounter++;
 
-				mouseLog[mouseLogCounter][0] = mouseRealX;			// Store the mouse data
+				// Was -> mouseLog[mouseLogCounter][0] = mouseRealX;			// Store the mouse data
+				GraphPlotTime = (LastEventTime - GraphStartTime) ;
+				MainPage::txtboxGraphTimer->Text = GraphPlotTime.count().ToString();
+				mouseLog[mouseLogCounter][0] = GraphPlotTime.count() * GraphTimeScalar;
 				mouseLog[mouseLogCounter][1] = mouseDeltaX;
 				MainPage::txtboxMouseDelta->Text = mouseDeltaX.ToString();
-				if (mouseDeltaX > 250)
-				{
-					int j = 90; // stop 
-				}
 				mouseDeltaX = 0;
 
 				// remember last position for next delta
